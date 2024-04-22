@@ -88,6 +88,9 @@ fun HomeScreen(uiState: HomeUiState = HomeUiState.Loading, onSendClicked: (Strin
     var userQues by rememberSaveable() {
         mutableStateOf("")
     }
+    var userInput by rememberSaveable() {
+        mutableStateOf("")
+    }
 
     val imageUris = rememberSaveable(saver = UriCustomSaver()){
         mutableStateListOf()
@@ -138,7 +141,9 @@ fun HomeScreen(uiState: HomeUiState = HomeUiState.Loading, onSendClicked: (Strin
                     //send button
                     IconButton(onClick = {
                                  if(userQues.isNotBlank()){
+                                     userInput = userQues
                                      onSendClicked(userQues, imageUris)
+
                                  }
                     }
                     ) {
@@ -186,13 +191,32 @@ fun HomeScreen(uiState: HomeUiState = HomeUiState.Loading, onSendClicked: (Strin
                 }
 
                 is HomeUiState.Success -> {
+
+                    Card(modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .fillMaxWidth(),
+                        shape = MaterialTheme.shapes.large
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp) // Adjust the horizontal padding as needed
+                        ) {
+                            Text(text = userInput)
+                        }
+                    }
+
                     Card(modifier = Modifier
                         .padding(vertical = 16.dp)
                         .fillMaxWidth(),
                             shape = MaterialTheme.shapes.large
                     ) {
-                        Text(text = uiState.outputText)
+                        Box(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp) // Adjust the horizontal padding as needed
+                        ) {
+                            Text(text = uiState.outputText)
+                        }
                     }
+                    userQues = ""
+
                 }
 
                 is HomeUiState.Error -> {
